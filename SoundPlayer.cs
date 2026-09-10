@@ -1,7 +1,3 @@
-﻿using System;
-using System.IO;
-using System.Media;
-
 namespace CybersecurityAwarenessBot.Classes
 {
     internal class AudioPlayer
@@ -10,17 +6,27 @@ namespace CybersecurityAwarenessBot.Classes
         {
             try
             {
-                string audioPath = Path.Combine("Audio", "greeting.wav");
+                string audioPath = Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    "Audio",
+                    "greeting.wav"
+                );
 
                 if (File.Exists(audioPath))
                 {
-                    SoundPlayer player = new SoundPlayer(audioPath);
-                    player.PlaySync();
+                    using (SoundPlayer player = new SoundPlayer(audioPath))
+                    {
+                        player.PlaySync();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Audio file not found: " + audioPath);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("Unable to play the greeting audio.");
+                Console.WriteLine("Error playing audio: " + ex.Message);
             }
         }
     }
